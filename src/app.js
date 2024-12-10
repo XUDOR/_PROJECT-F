@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios'); // For forwarding data to Project A
 require('dotenv').config();
 const path = require('path');
 
@@ -10,10 +11,19 @@ app.use(express.json());
 // Middleware for serving static files
 app.use(express.static(path.join(__dirname, '../public')));
 
-// POST endpoint to receive bundled data
-app.post('/api/communication', (req, res) => {
-    console.log('Received bundled data:', req.body);
-    res.status(200).json({ message: 'Bundled data received successfully', data: req.body });
+// POST endpoint to receive bundled data and forward it to Project A
+app.post('/api/communication', async (req, res) => {
+    try {
+        console.log('Received bundled data:', req.body);
+
+        // Forward the job data to Project A
+        await axios.post('http://localhost:3001/api/receive-jobs', req.body);
+
+        res.status(200).json({ message: 'Job data sent to Project A successfully' });
+    } catch (error) {
+        console.error('Error sending job data to Project A:', error.message);
+        res.status(500).json({ error: 'Failed to send job data to Project A.' });
+    }
 });
 
 // Example GET API endpoint
