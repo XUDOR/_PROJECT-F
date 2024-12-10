@@ -1,47 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // DOM Elements
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    const loadingIndicator = document.querySelector('.loading');
     const notificationsDiv = document.getElementById('notifications');
     const restartButton = document.getElementById('restart-polling-btn');
-
     let retryCount = 0;
     const maxRetries = 5;
     let pollingInterval;
-
-    // Navigation handling
-    navLinks.forEach(link => {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            const section = this.dataset.section;
-            handleNavigation(section);
-        });
-    });
-
-    // Handle navigation with loading state
-    function handleNavigation(section) {
-        showLoading();
-
-        // Simulate API call or page load
-        setTimeout(() => {
-            hideLoading();
-            updateContent(section);
-        }, 1000);
-    }
-
-    // Loading state functions
-    function showLoading() {
-        loadingIndicator.style.display = 'block';
-    }
-
-    function hideLoading() {
-        loadingIndicator.style.display = 'none';
-    }
-
-    // Update content based on section
-    function updateContent(section) {
-        console.log(`Navigating to ${section}`);
-    }
+    let lastNotification = null; // To store the last notification
 
     // Function to display a notification
     function displayNotification(message) {
@@ -59,9 +22,18 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!response.ok) {
                 throw new Error('Failed to fetch notifications');
             }
+
             const data = await response.json();
-            displayNotification(`New job posted: ${data.job_title} at ${data.company_name}`);
-            retryCount = 0; // Reset retry count on success
+            const newNotification = `${data.job_title} at ${data.company_name}`;
+
+            // Display the notification only if it's different from the last one
+            if (newNotification !== lastNotification) {
+                displayNotification(`New job posted: ${newNotification}`);
+                lastNotification = newNotification; // Update the last notification
+                retryCount = 0; // Reset retry count on success
+            } else {
+                console.log('No new notifications');
+            }
         } catch (error) {
             console.error('Error fetching notification:', error.message);
             retryCount += 1;
