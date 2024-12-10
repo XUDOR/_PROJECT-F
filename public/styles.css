@@ -82,6 +82,17 @@ main {
   font-size: 14px;
 }
 
+#restart-polling-btn {
+  border: 3px solid #184551;
+  margin-top: 1em;
+  padding: .3em;
+  color: #295250;
+}
+
+#restart-polling-btn:hover {
+background-color: #00796b;
+  color: #FFFFFD;
+}
 
 
 /* Tablet breakpoint */
