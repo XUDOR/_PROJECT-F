@@ -4,6 +4,7 @@ require('dotenv').config();
 const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3006;
 
 // Middleware for parsing JSON
 app.use(express.json());
@@ -37,7 +38,6 @@ app.get('/', (req, res) => {
 });
 
 // Start the server on port 3006
-const PORT = process.env.PORT || 3006;
 app.listen(PORT, () => {
     console.log(`Project F is running on http://localhost:${PORT}`);
 });

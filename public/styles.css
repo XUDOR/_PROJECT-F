@@ -64,6 +64,26 @@ main {
   margin-bottom: 2rem;
 }
 
+.notifications-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+
+.notification-item {
+  background-color: #e0f7fa;
+  color: #295250;
+
+  padding: 8px;
+  margin-bottom: 5px;
+  border-left: 4px solid #00796b;
+  font-size: 14px;
+}
+
+
+
 /* Tablet breakpoint */
 @media (min-width: 768px) {
   .grid-container {
