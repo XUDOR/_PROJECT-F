@@ -1,10 +1,14 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors'); // Import cors
 const mainRoutes = require('./routes/mainRoutes');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3006;
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware for parsing JSON
 app.use(express.json());
