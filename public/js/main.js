@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const notificationsDiv = document.getElementById('notifications');
     const restartButton = document.getElementById('restart-polling-btn');
     const pollingControlsDiv = document.getElementById('polling-controls');
+    const apiColumnDiv = document.getElementById('api-contents');
+    const refreshApiButton = document.getElementById('refresh-api-btn');
+
     let retryCount = 0;
     const maxRetries = 5;
     let pollingInterval;
@@ -15,6 +18,15 @@ document.addEventListener('DOMContentLoaded', function () {
         notification.classList.add('notification-item');
         notificationsDiv.appendChild(notification);
         console.log(message);
+    }
+
+    // Function to display API messages
+    function displayApiMessage(message) {
+        const apiMessage = document.createElement('div');
+        apiMessage.textContent = message;
+        apiMessage.classList.add('notification-item');
+        apiColumnDiv.appendChild(apiMessage);
+        console.log(`API Message: ${message}`);
     }
 
     // Fetch notifications from an API endpoint
@@ -44,6 +56,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error(`Max retries reached (${maxRetries}). Stopping polling.`);
                 stopPolling();
             }
+        }
+    }
+
+    // Fetch API messages from an API endpoint
+    async function fetchApiMessages() {
+        try {
+            const response = await fetch('/api/api-messages');
+            if (!response.ok) {
+                throw new Error('Failed to fetch API messages');
+            }
+
+            const data = await response.json();
+            apiColumnDiv.innerHTML = ''; // Clear existing messages
+
+            if (data.length === 0) {
+                apiColumnDiv.textContent = 'No API messages available.';
+                return;
+            }
+
+            data.forEach(msg => {
+                displayApiMessage(`${msg.message} - ${new Date(msg.timestamp).toLocaleString()}`);
+            });
+        } catch (error) {
+            console.error('Error fetching API messages:', error.message);
         }
     }
 
@@ -83,6 +119,12 @@ document.addEventListener('DOMContentLoaded', function () {
     pollingControlsDiv.appendChild(startButton);
     pollingControlsDiv.appendChild(stopButton);
 
+    // Event listener to refresh API messages
+    if (refreshApiButton) {
+        refreshApiButton.addEventListener('click', fetchApiMessages);
+    }
+
     // Initial polling start
     startPolling();
+    fetchApiMessages(); // Initial fetch for API messages
 });
