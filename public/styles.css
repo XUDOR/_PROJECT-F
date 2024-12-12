@@ -60,15 +60,16 @@ main {
 .grid-container {
   display: grid;
   gap: 2rem;
-  grid-template-columns: 1fr;  /* Mobile first - single column */
+  grid-template-columns: repeat(3, 1fr); /* Ensure 3 equal columns */
   margin-bottom: 2rem;
 }
 
 .notifications-container {
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
-  max-height: 200px;
-  overflow-y: auto;
   background-color: #f9f9f9;
 }
 
@@ -82,15 +83,38 @@ main {
   font-size: 14px;
 }
 
+.Button-Refresh:hover {
+  background-color: #F49B0C;
+  color: #20232A;
+}
+
+#notifications,
+#api-contents {
+
+  color:#295250;
+}
+
+.notifications-container {
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+
+
 #restart-polling-btn,
 #polling-controls {
   border: 3px solid #184551;
   margin-top: 1em;
+  
   padding: .3em;
   color: #295250;
 }
 
-#restart-polling-btn:hover,
+#restart-polling-btn:hover
 #polling-controls:hover {
 background-color: #00796b;
   color: #FFFFFD;
@@ -111,11 +135,12 @@ background-color: #00796b;
   }
 }
 
+/* Grid item styling */
 .grid-item {
   background-color: #444340;
   padding: 2rem;
   min-height: 200px;
- 
+  width: 100%; /* Ensure full width */
 }
 
 
