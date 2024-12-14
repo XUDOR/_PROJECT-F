@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
     const notificationsDiv = document.getElementById('notifications');
-    const restartButton = document.getElementById('restart-polling-btn');
-    const pollingControlsDiv = document.getElementById('polling-controls');
     const apiColumnDiv = document.getElementById('api-contents');
     const refreshApiButton = document.getElementById('refresh-api-btn');
     const clearApiButton = document.getElementById('clear-api-btn');
@@ -87,45 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
             apiColumnDiv.textContent = 'Failed to load API messages.';
         }
     }
-
-
-
-    // Start polling function
-    function startPolling() {
-        if (!isPollingActive) {
-            pollingInterval = setInterval(fetchNotification, 10000);
-            isPollingActive = true;
-            console.log('Polling started...');
-        }
-    }
-
-    // Stop polling function
-    function stopPolling() {
-        clearInterval(pollingInterval);
-        isPollingActive = false;
-        console.log('Polling stopped.');
-    }
-
-    // Restart polling manually
-    restartButton.addEventListener('click', function () {
-        stopPolling();
-        retryCount = 0;
-        startPolling();
-        console.log('Polling restarted manually.');
-    });
-
-    // Add Start and Stop buttons to the polling controls div
-    const startButton = document.createElement('button');
-    startButton.textContent = 'Start Polling';
-    startButton.addEventListener('click', startPolling);
-
-    const stopButton = document.createElement('button');
-    stopButton.textContent = 'Stop Polling';
-    stopButton.addEventListener('click', stopPolling);
-
-    pollingControlsDiv.appendChild(startButton);
-    pollingControlsDiv.appendChild(stopButton);
-
+    
     // Event listener to refresh API messages
     if (refreshApiButton) {
         refreshApiButton.addEventListener('click', fetchApiMessages);
@@ -137,6 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Initial polling start
-    startPolling();
+   
     fetchApiMessages(); // Initial fetch for API messages
 });

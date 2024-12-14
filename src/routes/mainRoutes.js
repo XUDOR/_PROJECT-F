@@ -12,6 +12,7 @@ router.get('/api/api-messages', (req, res) => {
     res.json(apiMessages);
 });
 
+
 // ------------------- API STATUS ROUTE ------------------- //
 
 router.get('/api/status', (req, res) => {

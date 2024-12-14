@@ -122,24 +122,6 @@ main {
   background-color: #f9f9f9;
 }
 
-
-
-#restart-polling-btn,
-#polling-controls {
-  border: 3px solid #184551;
-  margin-top: 1em;
-  
-  padding: .3em;
-  color: #295250;
-}
-
-#restart-polling-btn:hover
-#polling-controls:hover {
-background-color: #00796b;
-  color: #FFFFFD;
-}
-
-
 /* Tablet breakpoint */
 @media (min-width: 768px) {
   .grid-container {
@@ -161,8 +143,6 @@ background-color: #00796b;
   min-height: 200px;
   width: 100%; /* Ensure full width */
 }
-
-
 
 /* Footer styles */
 footer {
