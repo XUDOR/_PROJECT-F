@@ -7,6 +7,11 @@ const router = express.Router();
 const notifications = [];
 const apiMessages = [];
 
+router.get('/api/api-messages', (req, res) => {
+    res.set('Cache-Control', 'no-store'); // Prevent caching
+    res.json(apiMessages);
+});
+
 // ------------------- API STATUS ROUTE ------------------- //
 
 router.get('/api/status', (req, res) => {
@@ -16,6 +21,28 @@ router.get('/api/status', (req, res) => {
         message: 'Project F (Communication) is running'
     });
 });
+
+// ------------------- RECEIVE NOTIFICATIONS ------------------- //
+router.post('/api/notifications', (req, res) => {
+    const { message } = req.body;
+    const timestamp = new Date().toISOString();
+
+    notifications.push({ message, timestamp });
+    apiMessages.push({ message: `Notification: ${message}`, timestamp }); // Add to API messages
+
+    res.status(200).json({ message: 'Notification received' });
+});
+
+
+// ------------------- FETCH API MESSAGES ------------------- //
+router.get('/api/api-messages', (req, res) => {
+    const messagesToSend = [...apiMessages];
+    apiMessages.length = 0; // Clear the array after sending the messages
+    res.json(messagesToSend);
+});
+
+module.exports = router;
+
 
 
 // ------------------- JOB DATA FORWARDING ------------------- //

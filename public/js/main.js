@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const pollingControlsDiv = document.getElementById('polling-controls');
     const apiColumnDiv = document.getElementById('api-contents');
     const refreshApiButton = document.getElementById('refresh-api-btn');
+    const clearApiButton = document.getElementById('clear-api-btn');
 
     let retryCount = 0;
     const maxRetries = 5;
@@ -61,14 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Fetch API messages from an API endpoint
     async function fetchApiMessages() {
+        apiColumnDiv.innerHTML = ''; // Clear existing messages immediately
+        apiColumnDiv.textContent = 'Loading...'; // Show loading state
+
         try {
-            const response = await fetch('/api/api-messages');
+            const response = await fetch(`/api/api-messages?_=${new Date().getTime()}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch API messages');
             }
 
             const data = await response.json();
-            apiColumnDiv.innerHTML = ''; // Clear existing messages
+            apiColumnDiv.innerHTML = ''; // Clear loading state
 
             if (data.length === 0) {
                 apiColumnDiv.textContent = 'No API messages available.';
@@ -80,8 +84,11 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         } catch (error) {
             console.error('Error fetching API messages:', error.message);
+            apiColumnDiv.textContent = 'Failed to load API messages.';
         }
     }
+
+
 
     // Start polling function
     function startPolling() {
@@ -123,6 +130,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (refreshApiButton) {
         refreshApiButton.addEventListener('click', fetchApiMessages);
     }
+
+    clearApiButton.addEventListener('click', () => {
+        apiColumnDiv.innerHTML = ''; // Clear the contents of the API messages div
+        console.log('API messages cleared');
+    });
 
     // Initial polling start
     startPolling();

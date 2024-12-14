@@ -64,7 +64,8 @@ main {
   margin-bottom: 2rem;
 }
 
-.notifications-container {
+.notifications-container,
+#api-contents {
   margin-top: 10px;
   max-height: 300px;
   overflow-y: auto;
@@ -83,18 +84,36 @@ main {
   font-size: 14px;
 }
 
-.Button-Refresh:hover {
-  background-color: #F49B0C;
-  color: #20232A;
+/* Button styles adapted from Project B with Project F's colors */
+.Button-Refresh,
+.Button-Clear {
+  padding: 5px 10px;
+  margin: 3px;
+  border: 2px solid #0AAAC3;  /* Border color */
+  background-color: transparent;
+  color: #0AAAC3;             /* Text color */
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+.Button-Refresh:hover,
+.Button-Clear:hover {
+  background-color: #184551;  /* Background color on hover */
+  color: #0AAAC3;             /* Text color on hover */
+}
+
 
 #notifications,
 #api-contents {
-
   color:#295250;
 }
 
-.notifications-container {
+
+
+.notifications-container
+
+{
   margin-top: 10px;
   max-height: 300px;
   overflow-y: auto;
