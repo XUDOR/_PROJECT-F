@@ -1,22 +1,42 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const notificationsDiv = document.getElementById('notifications');
+    const refreshNotificationsBtn = document.getElementById('refresh-notifications-btn');
     const apiColumnDiv = document.getElementById('api-contents');
     const refreshApiButton = document.getElementById('refresh-api-btn');
     const clearApiButton = document.getElementById('clear-api-btn');
 
-    let retryCount = 0;
-    const maxRetries = 5;
-    let pollingInterval;
-    let lastNotification = null; // To store the last notification
-    let isPollingActive = false;
-
-    // Function to display a notification
+    // Function to display a single notification
     function displayNotification(message) {
-        const notification = document.createElement('div');
-        notification.textContent = message;
-        notification.classList.add('notification-item');
-        notificationsDiv.appendChild(notification);
-        console.log(message);
+        const notificationsDiv = document.getElementById('notifications');
+        const notificationElement = document.createElement('div');
+        notificationElement.textContent = message;
+        notificationElement.classList.add('notification-item');
+        
+        // Append normally so that after sorting, the newest is placed first, then older follow
+        notificationsDiv.appendChild(notificationElement);
+    }
+
+    // Function to fetch and display all notifications (sorted newest to oldest)
+    async function fetchAllNotifications() {
+        try {
+            const response = await fetch('/api/notifications');
+            if (!response.ok) {
+                throw new Error('Failed to fetch notifications');
+            }
+
+            const data = await response.json();
+
+            // Sort notifications by timestamp descending (newest first)
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            const notificationsDiv = document.getElementById('notifications');
+            notificationsDiv.innerHTML = ''; // Clear existing notifications
+
+            data.forEach(notification => {
+                displayNotification(`${notification.message} - ${new Date(notification.timestamp).toLocaleString()}`);
+            });
+        } catch (error) {
+            console.error('Error fetching notifications:', error.message);
+        }
     }
 
     // Function to display API messages
@@ -28,56 +48,27 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log(`API Message: ${message}`);
     }
 
-    // Fetch notifications from an API endpoint
-    async function fetchNotification() {
-        try {
-            const response = await fetch('/api/notifications');
-            if (!response.ok) {
-                throw new Error('Failed to fetch notifications');
-            }
-
-            const data = await response.json();
-            const newNotification = `${data.job_title} at ${data.company_name}`;
-
-            // Display the notification only if it's different from the last one
-            if (newNotification !== lastNotification) {
-                displayNotification(`New job posted: ${newNotification}`);
-                lastNotification = newNotification; // Update the last notification
-                retryCount = 0; // Reset retry count on success
-            } else {
-                console.log('No new notifications');
-            }
-        } catch (error) {
-            console.error('Error fetching notification:', error.message);
-            retryCount += 1;
-
-            if (retryCount >= maxRetries) {
-                console.error(`Max retries reached (${maxRetries}). Stopping polling.`);
-                stopPolling();
-            }
-        }
-    }
-
-    // Fetch API messages from an API endpoint
+    // Function to fetch API messages
     async function fetchApiMessages() {
         apiColumnDiv.innerHTML = ''; // Clear existing messages immediately
         apiColumnDiv.textContent = 'Loading...'; // Show loading state
-
+    
         try {
             const response = await fetch(`/api/api-messages?_=${new Date().getTime()}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch API messages');
             }
-
+    
             const data = await response.json();
             apiColumnDiv.innerHTML = ''; // Clear loading state
-
+    
             if (data.length === 0) {
                 apiColumnDiv.textContent = 'No API messages available.';
                 return;
             }
-
-            data.forEach(msg => {
+    
+            // Reverse the messages to display new-to-old order
+            data.reverse().forEach(msg => {
                 displayApiMessage(`${msg.message} - ${new Date(msg.timestamp).toLocaleString()}`);
             });
         } catch (error) {
@@ -85,18 +76,25 @@ document.addEventListener('DOMContentLoaded', function () {
             apiColumnDiv.textContent = 'Failed to load API messages.';
         }
     }
-    
+
+    // Event listener to refresh notifications
+    if (refreshNotificationsBtn) {
+        refreshNotificationsBtn.addEventListener('click', fetchAllNotifications);
+    }
+
     // Event listener to refresh API messages
     if (refreshApiButton) {
         refreshApiButton.addEventListener('click', fetchApiMessages);
     }
 
+    // Clear API messages button
     clearApiButton.addEventListener('click', () => {
         apiColumnDiv.innerHTML = ''; // Clear the contents of the API messages div
         console.log('API messages cleared');
     });
 
-    // Initial polling start
-   
+    // Initial fetches
     fetchApiMessages(); // Initial fetch for API messages
+    // Optionally, you could also fetch notifications on page load:
+    // fetchAllNotifications();
 });
