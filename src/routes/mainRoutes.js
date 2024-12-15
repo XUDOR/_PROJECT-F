@@ -1,3 +1,5 @@
+// mainRoutes.js
+
 const express = require('express');
 const axios = require('axios');
 const { PROJECT_A_URL } = require('../../config/const'); // Import URL from const.js
@@ -26,7 +28,7 @@ router.post('/api/notifications', (req, res) => {
 
     const timestamp = new Date().toISOString();
     notifications.push({ message, timestamp });
-    
+
     // Also log as an API message for system-level tracking
     apiMessages.push({ message: `Notification: ${message}`, timestamp });
 
@@ -34,7 +36,7 @@ router.post('/api/notifications', (req, res) => {
     res.status(200).json({ success: true, message: 'Notification received.' });
 });
 
-// GET: Fetch notifications
+// GET: Fetch all notifications
 router.get('/api/notifications', (req, res) => {
     res.json(notifications);
 });
@@ -51,16 +53,13 @@ router.post('/api/messages', (req, res) => {
     res.status(200).json({ message: 'API message received' });
 });
 
-// GET: Fetch and optionally clear API messages
+// GET: Fetch API messages
 router.get('/api/api-messages', (req, res) => {
-    // Decide on how you want to handle the messages.
-    // For example, return all current messages without clearing them:
     res.set('Cache-Control', 'no-store'); // Prevent caching
     res.json(apiMessages);
 });
 
 // ------------------- JOB DATA FORWARDING ------------------- //
-// Route to receive job data from Project D and forward it to Project A
 router.post('/api/communication', async (req, res) => {
     try {
         const jobData = req.body;
@@ -72,20 +71,19 @@ router.post('/api/communication', async (req, res) => {
 
         // Log API message
         apiMessages.push({ message: 'Job data forwarded to Project A', timestamp: new Date().toISOString() });
-        
+
         res.status(200).json({ message: 'Job data sent to Project A successfully', data: response.data });
     } catch (error) {
         console.error('Error forwarding job data to Project A:', error.message);
 
         // Log API error message
         apiMessages.push({ message: `Error forwarding job data: ${error.message}`, timestamp: new Date().toISOString() });
-        
+
         res.status(500).json({ error: 'Failed to forward job data to Project A.' });
     }
 });
 
 // ------------------- HEALTH CHECK ROUTES ------------------- //
-// Check the health of connected services (e.g., Project A)
 router.get('/api/health', async (req, res) => {
     const services = {
         ProjectA: PROJECT_A_URL,
