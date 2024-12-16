@@ -26,18 +26,21 @@ router.post('/api/notifications', (req, res) => {
         return res.status(400).json({ error: 'Message is required.' });
     }
 
+    console.log('Received notification:', message); // Add this
     const timestamp = new Date().toISOString();
     notifications.push({ message, timestamp });
 
     // Also log as an API message for system-level tracking
     apiMessages.push({ message: `Notification: ${message}`, timestamp });
+    console.log('Current notifications:', notifications); // Add this
+    console.log('Current API messages:', apiMessages); // Add this
 
     console.log(`Notification received: ${message}`);
     res.status(200).json({ success: true, message: 'Notification received.' });
 });
 
-// GET: Fetch all notifications
 router.get('/api/notifications', (req, res) => {
+    console.log('Sending notifications:', notifications); // Add this
     res.json(notifications);
 });
 
@@ -49,13 +52,16 @@ router.post('/api/messages', (req, res) => {
         return res.status(400).json({ error: 'Message is required.' });
     }
 
+    console.log('Received API message:', message); // Add this
     apiMessages.push({ message: `API Message: ${message}`, timestamp: new Date().toISOString() });
+    console.log('Current API messages after adding:', apiMessages); // Add this
     res.status(200).json({ message: 'API message received' });
 });
 
 // GET: Fetch API messages
 router.get('/api/api-messages', (req, res) => {
-    res.set('Cache-Control', 'no-store'); // Prevent caching
+    console.log('Sending API messages:', apiMessages); // Add this
+    res.set('Cache-Control', 'no-store');
     res.json(apiMessages);
 });
 

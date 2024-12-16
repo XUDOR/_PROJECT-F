@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Function to fetch and display all notifications (sorted newest to oldest)
     async function fetchAllNotifications() {
         try {
+            console.log('Fetching notifications...'); // Add this
             const response = await fetch('/api/notifications');
             if (!response.ok) {
                 throw new Error('Failed to fetch notifications');
             }
-
+    
             const data = await response.json();
+            console.log('Received notifications:', data);
 
             // Sort notifications by timestamp descending (newest first)
             data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -50,16 +52,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Function to fetch API messages
     async function fetchApiMessages() {
-        apiColumnDiv.innerHTML = ''; // Clear existing messages immediately
-        apiColumnDiv.textContent = 'Loading...'; // Show loading state
-    
         try {
+            console.log('Fetching API messages...'); // Add this
             const response = await fetch(`/api/api-messages?_=${new Date().getTime()}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch API messages');
             }
     
             const data = await response.json();
+            console.log('Received API messages:', data); // Add this
             apiColumnDiv.innerHTML = ''; // Clear loading state
     
             if (data.length === 0) {
@@ -96,5 +97,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial fetches
     fetchApiMessages(); // Initial fetch for API messages
     // Optionally, you could also fetch notifications on page load:
-    // fetchAllNotifications();
+    fetchAllNotifications();
 });
