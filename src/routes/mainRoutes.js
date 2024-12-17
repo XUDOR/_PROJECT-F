@@ -89,6 +89,22 @@ router.post('/api/communication', async (req, res) => {
     }
 });
 
+// ------------------- SECURITY EVENTS ROUTE ------------------- //
+// POST: Receive security events
+router.post('/api/security-events', (req, res) => {
+    const { message, level, source, timestamp } = req.body;
+
+    if (!message || !level || !source || !timestamp) {
+        return res.status(400).json({ error: 'Missing required fields: message, level, source, or timestamp.' });
+    }
+
+    console.log(`Security Event Received: ${message} (Level: ${level}, Source: ${source})`);
+    res.status(200).json({ success: true, message: 'Security event logged successfully.' });
+});
+
+
+
+
 // ------------------- HEALTH CHECK ROUTES ------------------- //
 router.get('/api/health', async (req, res) => {
     const services = {
