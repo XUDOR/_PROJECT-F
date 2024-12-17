@@ -18,6 +18,13 @@ router.get('/api/status', (req, res) => {
     });
 });
 
+// ---------------- HEALTHCHECK ---------------- //
+
+router.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'Project F is up and running' });
+});
+
+
 // ------------------- NOTIFICATIONS ROUTES ------------------- //
 // POST: Receive notifications
 router.post('/api/notifications', (req, res) => {
