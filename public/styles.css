@@ -67,7 +67,7 @@ main {
 .notifications-container,
 #api-contents {
   margin-top: 10px;
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
@@ -115,7 +115,7 @@ main {
 
 {
   margin-top: 10px;
-  max-height: 300px;
+  max-height: 500px;
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 10px;
