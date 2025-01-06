@@ -136,6 +136,12 @@ main {
   }
 }
 
+.titleTag {
+  font-weight: lighter;
+}
+
+
+
 /* Grid item styling */
 .grid-item {
   background-color: #444340;
